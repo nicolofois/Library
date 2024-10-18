@@ -32,6 +32,7 @@ public class Reader {
     public String getSurname() {
         return surname;
     }
+
     public void setSurname(String surname) {
         this.surname = surname;
     }
@@ -40,5 +41,12 @@ public class Reader {
         rented.put(book.getId(), rental);
         book.setAvailable(false);
     }
+
+    public String getFullName() {
+        return this.name + " " + this.surname;
+    }
+
+    
+
 
 }

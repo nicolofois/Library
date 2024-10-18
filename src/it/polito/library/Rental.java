@@ -51,8 +51,8 @@ public class Rental {
         return ending;
     }
 
-    public void setEnding(String ending) {
-        this.ending = ending;
+    public void setEnding(String end) {
+        this.ending = end;
     }
 
     public String toString() {

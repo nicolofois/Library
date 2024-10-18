@@ -1,5 +1,6 @@
 package it.polito.library;
 
+import java.util.LinkedList;
 import java.util.TreeMap;
 
 public class Book {
@@ -7,6 +8,7 @@ public class Book {
     String title;
     int number;
     boolean available;
+    LinkedList<Book> duplicated;
     TreeMap<String,String> renters;
 
     public Book(String id, String title) {
@@ -15,6 +17,7 @@ public class Book {
         this.number = 1;
         this.available = true;
         this.renters = new TreeMap<>();
+        this.duplicated = new LinkedList<>();
     }
 
     public String getId() {
@@ -55,6 +58,14 @@ public class Book {
 
     public TreeMap<String, String> getRenters() {
         return renters;
+    }
+
+    public void addDuplicated(Book b) {
+        this.duplicated.add(b);
+    }
+
+    public Integer getDuplicatedNumber() {
+        return this.duplicated.size() + 1;
     }
 
     

@@ -28,6 +28,11 @@ public class LibraryManager {
 	 */
     public String addBook(String title) {
 		Book b = new Book(Integer.toString(currentid),title);
+		if (books.get(title) != null) {
+			books.get(title).addDuplicated(b);
+			currentid++;
+			return Integer.toString(currentid-1);
+		}
 		books.put(Integer.toString(currentid),b);
 		currentid++;
         return Integer.toString(currentid-1);
@@ -40,8 +45,12 @@ public class LibraryManager {
 	 * 
 	 * @return a map of the titles liked to the number of available copies
 	 */
-    public SortedMap<String, Integer> getTitles() {    	
-        return books.values().stream().collect(null);
+    public SortedMap<String, Integer> getTitles() {   
+		SortedMap<String,Integer> titles = new TreeMap<>();
+		for (Book b : books.values()) {
+			titles.put(b.getTitle(), b.getDuplicatedNumber());
+		}
+        return titles;
     }
     
     /**
@@ -60,8 +69,9 @@ public class LibraryManager {
 	 * @param surname last name of the reader
 	 */
     public void addReader(String name, String surname) {
-		Reader r = new Reader(Integer.toString(currentReaderid),name,surname);
+		Reader r = new Reader(Integer.toString(currentReaderid), name, surname);
 		readers.put(Integer.toString(currentReaderid), r);
+		currentReaderid++;
     }
     
     
@@ -76,7 +86,7 @@ public class LibraryManager {
 		if (readers.get(readerID) == null) {
 			throw new LibException("Lettore non presente nel DB");
 		}
-        return readers.get(readerID).getName();
+        return readers.get(readerID).getFullName();
     }    
     
     
@@ -98,14 +108,13 @@ public class LibraryManager {
 
 		String book = books.values().stream().
 						filter(b -> b.getTitle() == bookTitle && b.isAvailable()).
-						map(b -> b.getTitle()).
-						findFirst().
-						toString();
+						map(b -> b.getId()).
+						findFirst().orElse(null);
 
 		if (book == null) {
-			return "Non disponibile";
+			return "Not available";
 		}
-        return null;
+        return book;
     }   
 
     /**
@@ -174,6 +183,16 @@ public class LibraryManager {
 	* @param donatedTitles It takes in input book titles in the format "First title,Second title"
 	*/
     public void receiveDonation(String donatedTitles) {
+		String don[] = donatedTitles.split(",");
+		for (String d : don) {
+			Book b = new Book(Integer.toString(currentid++),d);
+			if (books.get(d) != null) {
+				books.get(d).addDuplicated(b);
+			}
+			else {
+				books.put(d, b);
+			}
+		}
     }
     
     // R4: Archive Management
